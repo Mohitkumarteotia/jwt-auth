@@ -5,6 +5,7 @@ import com.service.jwt_auth.pojos.request.RegisterRequest;
 import com.service.jwt_auth.pojos.response.AuthResponse;
 import com.service.jwt_auth.pojos.response.RegisterResponse;
 import com.service.jwt_auth.service.AuthService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<RegisterResponse> register(@RequestBody @Valid RegisterRequest request) {
         RegisterResponse response = authService.registerUser(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }

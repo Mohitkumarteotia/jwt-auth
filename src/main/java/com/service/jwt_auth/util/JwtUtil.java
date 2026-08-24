@@ -1,5 +1,6 @@
 package com.service.jwt_auth.util;
 
+import com.service.jwt_auth.config.JwtProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -13,11 +14,14 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    private static final String SECRET = "mySuperSecretKeyForJwtAuthentication123456789";
+    private final JwtProperties jwtProperties;
+    private final SecretKey KEY;
 
-    private static final SecretKey KEY = Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
+    public JwtUtil(JwtProperties jwtProperties) {
+        this.jwtProperties = jwtProperties;
+        this.KEY = Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes(StandardCharsets.UTF_8));
+    }
 
-    private static final long EXPIRATION_TIME = 1000 * 60 * 60;
 
     public String generateToken(String username) {
 
@@ -25,7 +29,7 @@ public class JwtUtil {
                 .setSubject(username)
                 .setIssuedAt(new Date())
                 .setExpiration(
-                        new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                        new Date(System.currentTimeMillis() + jwtProperties.getExpirationTime()))
                 .signWith(KEY, SignatureAlgorithm.HS256)
                 .compact();
     }

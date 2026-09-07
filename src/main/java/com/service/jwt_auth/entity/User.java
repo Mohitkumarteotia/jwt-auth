@@ -1,5 +1,6 @@
 package com.service.jwt_auth.entity;
 
+import com.service.jwt_auth.pojos.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,4 +21,7 @@ public class User {
     private String name;
     @Column(name = "password", nullable = false)
     private String password;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private Role role;
 }

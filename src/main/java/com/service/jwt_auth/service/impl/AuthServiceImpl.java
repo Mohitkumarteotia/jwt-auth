@@ -3,6 +3,7 @@ package com.service.jwt_auth.service.impl;
 import com.service.jwt_auth.entity.User;
 import com.service.jwt_auth.exception.custom.InvalidCredentialsException;
 import com.service.jwt_auth.exception.custom.UserNotFoundException;
+import com.service.jwt_auth.pojos.enums.Role;
 import com.service.jwt_auth.pojos.request.AuthRequest;
 import com.service.jwt_auth.pojos.request.RegisterRequest;
 import com.service.jwt_auth.pojos.response.AuthResponse;
@@ -29,10 +30,12 @@ public class AuthServiceImpl implements AuthService {
         User user = User.builder()
                 .name(request.getName())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .role(Role.valueOf(request.getRole()))
                 .build();
         userRepository.save(user);
         return RegisterResponse.builder()
                 .name(user.getName())
+                .role(String.valueOf(user.getRole()))
                 .build();
     }
 
@@ -43,7 +46,7 @@ public class AuthServiceImpl implements AuthService {
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new InvalidCredentialsException("Invalid Credentials");
         }
-        String token = jwtUtil.generateToken(user.getName());
+        String token = jwtUtil.generateToken(user.getName(),String.valueOf(user.getRole()));
         return AuthResponse.builder()
                 .name(user.getName())
                 .token(token)

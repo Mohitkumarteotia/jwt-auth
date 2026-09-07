@@ -2,6 +2,7 @@ package com.service.jwt_auth.controller;
 
 import com.service.jwt_auth.pojos.request.Employee;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,6 +16,7 @@ public class TestController {
     }
 
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_XML_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('ADMIN')")
     public Employee create(@RequestBody Employee employee) {
         return employee;
     }

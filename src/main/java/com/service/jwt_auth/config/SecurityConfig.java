@@ -1,5 +1,6 @@
 package com.service.jwt_auth.config;
 
+import com.service.jwt_auth.exception.custom.JwtAuthenticationEntryPoint;
 import com.service.jwt_auth.util.JWTFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -24,6 +25,9 @@ public class SecurityConfig {
 
         http
                 .csrf(csrf -> csrf.disable())
+                .exceptionHandling(ex ->
+                        ex.authenticationEntryPoint(
+        new JwtAuthenticationEntryPoint()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .anyRequest().authenticated()
